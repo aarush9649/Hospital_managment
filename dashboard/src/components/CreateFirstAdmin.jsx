@@ -19,13 +19,13 @@ const CreateFirstAdmin = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/user/create-admin", // backend URL
-        formData
+        `${process.env.REACT_APP_API_URL}/api/v1/user/create-admin`,
+        formData,
+        { withCredentials: true }
       );
 
       toast.success("✅ First Admin Created Successfully!");
       setFormData({ firstName: "", lastName: "", email: "", phone: "", nic: "", dob: "", gender: "", password: "" });
-
       setTimeout(() => navigateTo("/login"), 2000);
 
     } catch (error) {

@@ -15,9 +15,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/user/login", // ✅ backend URL
+        `${process.env.REACT_APP_API_URL}/api/v1/user/login`,
         { email, password, role: "Admin" },
-        { withCredentials: true } // ✅ cookie support
+        { withCredentials: true }
       );
 
       toast.success(data.message);
