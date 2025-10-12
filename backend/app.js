@@ -17,7 +17,7 @@ app.use(cors({
     "http://localhost:5173",
     "http://localhost:5174", 
     "http://localhost:3000",
-    "https://hospital-managment-1-t0qi.onrender.com",
+    "https://hospital-managment-nt9p.vercel.app"
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
