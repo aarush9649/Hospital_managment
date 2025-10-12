@@ -27,7 +27,7 @@ const Register = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/user/patient/register",
+        `${process.env.REACT_APP_API_URL}/api/v1/user/patient/register`,
         { firstName, lastName, email, phone, nic, dob, gender, password },
         {
           withCredentials: true,
@@ -40,6 +40,7 @@ const Register = () => {
       setUser(data.user);
       navigateTo("/");
 
+      // Clear form
       setFirstName("");
       setLastName("");
       setEmail("");

@@ -16,8 +16,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/v1/user/login",
-        { email, password, role: "Patient" }, // ✅ confirmPassword hata diya
+        `${process.env.REACT_APP_API_URL}/api/v1/user/login`,
+        { email, password, role: "Patient" },
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
