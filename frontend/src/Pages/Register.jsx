@@ -26,8 +26,10 @@ const Register = () => {
     }
 
     try {
+      console.log("Backend URL:", import.meta.env.VITE_API_URL);
+
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/user/patient/register`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/patient/register`,
         { firstName, lastName, email, phone, nic, dob, gender, password },
         {
           withCredentials: true,
@@ -40,7 +42,6 @@ const Register = () => {
       setUser(data.user);
       navigateTo("/");
 
-      // Clear form
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -122,7 +123,11 @@ const Register = () => {
           />
         </div>
         <div>
-          <select value={gender} onChange={(e) => setGender(e.target.value)} required>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            required
+          >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -135,9 +140,18 @@ const Register = () => {
             required
           />
         </div>
-        <div style={{ gap: "10px", justifyContent: "flex-end", flexDirection: "row" }}>
+        <div
+          style={{
+            gap: "10px",
+            justifyContent: "flex-end",
+            flexDirection: "row",
+          }}
+        >
           <p style={{ marginBottom: 0 }}>Already Registered?</p>
-          <Link to={"/login"} style={{ textDecoration: "none", color: "#271776ca" }}>
+          <Link
+            to={"/login"}
+            style={{ textDecoration: "none", color: "#271776ca" }}
+          >
             Login Now
           </Link>
         </div>
