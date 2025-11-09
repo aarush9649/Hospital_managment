@@ -19,6 +19,7 @@ export const patientRegister = catchAsyncErrors(async (req, res, next) => {
   const user = await User.create({
     firstName, lastName, email, phone, nic, dob, gender, password, role: "Patient",
   });
+
   generateToken(user, "User Registered!", 200, res);
 });
 
@@ -42,8 +43,9 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (role !== user.role) {
     return next(new ErrorHandler(`User Not Found With This Role!`, 400));
   }
-  
-  generateToken(user, "Login Successfully!", 201, res);
+
+  // ✅ use 200 (not 201)
+  generateToken(user, "Login Successfully!", 200, res);
 });
 
 export const addNewAdmin = catchAsyncErrors(async (req, res, next) => {
@@ -73,18 +75,15 @@ export const addNewDoctor = catchAsyncErrors(async (req, res, next) => {
   try {
     const { firstName, lastName, email, phone, nic, dob, gender, password, doctorDepartment } = req.body;
 
-    // ✅ SIMPLE VALIDATION
     if (!firstName || !lastName || !email || !phone || !nic || !dob || !gender || !password || !doctorDepartment) {
       return next(new ErrorHandler("All fields are required", 400));
     }
 
-    // ✅ CHECK EXISTING USER
     const isRegistered = await User.findOne({ email });
     if (isRegistered) {
       return next(new ErrorHandler("Email already exists", 400));
     }
 
-    // ✅ CREATE DOCTOR
     const doctor = await User.create({
       firstName,
       lastName,
@@ -131,21 +130,33 @@ export const getUserDetails = catchAsyncErrors(async (req, res, next) => {
 });
 
 export const logoutAdmin = catchAsyncErrors(async (req, res, next) => {
-  res.status(200).cookie("adminToken", "", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  }).json({
-    success: true,
-    message: "Admin Logged Out Successfully.",
-  });
+  res
+    .status(200)
+    .cookie("adminToken", "", {
+      httpOnly: true,
+      sameSite:
+        process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0),
+    })
+    .json({
+      success: true,
+      message: "Admin Logged Out Successfully.",
+    });
 });
 
 export const logoutPatient = catchAsyncErrors(async (req, res, next) => {
-  res.status(200).cookie("patientToken", "", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  }).json({
-    success: true,
-    message: "Patient Logged Out Successfully.",
-  });
+  res
+    .status(200)
+    .cookie("patientToken", "", {
+      httpOnly: true,
+      sameSite:
+        process.env.NODE_ENV === "production" ? "None" : "Lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0),
+    })
+    .json({
+      success: true,
+      message: "Patient Logged Out Successfully.",
+    });
 });
