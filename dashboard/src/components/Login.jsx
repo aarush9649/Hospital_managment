@@ -13,22 +13,30 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
+      // ✅ Corrected API URL for Vite environment
       const { data } = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/user/login`,
+        `${import.meta.env.VITE_API_URL}/api/v1/user/login`,
         { email, password, role: "Admin" },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
       );
 
-      toast.success(data.message);
+      toast.success(data.message || "Login successful!");
       setIsAuthenticated(true);
       setAdmin(data.user);
       navigateTo("/"); // redirect to dashboard
       setEmail("");
       setPassword("");
-
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed! Please check your credentials.");
+      console.error("Login Error:", error);
+      toast.error(
+        error?.response?.data?.message ||
+          "Login failed! Please check your credentials."
+      );
     }
   };
 
@@ -42,21 +50,23 @@ const Login = () => {
       <h1 className="form-title">WELCOME TO ZEECARE</h1>
       <p>Only Admins Are Allowed To Access These Resources!</p>
 
-      <div style={{ 
-        textAlign: "center", 
-        marginBottom: "20px", 
-        padding: "15px", 
-        background: "#f8f9fa", 
-        borderRadius: "8px",
-        border: "1px solid #e9ecef"
-      }}>
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: "20px",
+          padding: "15px",
+          background: "#f8f9fa",
+          borderRadius: "8px",
+          border: "1px solid #e9ecef",
+        }}
+      >
         <p style={{ margin: 0, color: "#666", fontSize: "14px" }}>
           Don't have an admin account?{" "}
-          <span 
-            style={{ 
-              color: "#271776ca", 
-              fontWeight: "bold", 
-              cursor: "pointer"
+          <span
+            style={{
+              color: "#271776ca",
+              fontWeight: "bold",
+              cursor: "pointer",
             }}
             onClick={() => navigateTo("/setup-admin")}
           >
@@ -80,7 +90,13 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <div style={{ justifyContent: "center", alignItems: "center", marginTop: "20px" }}>
+        <div
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "20px",
+          }}
+        >
           <button type="submit">Login</button>
         </div>
       </form>
